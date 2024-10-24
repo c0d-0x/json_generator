@@ -12,13 +12,11 @@ size_t validate_json(char *json_file) {
 
   CC = fgetc(json_fp);
   if (CC != '[') {
-    if (CC == EOF) {
-      fclose(json_fp);
+    fclose(json_fp);
+    if (CC == EOF)
       return EMPTY_FILE;
-    } else {
-      fclose(json_fp);
+    else
       return INVALID_JSON;
-    }
   }
 
   /**
@@ -34,8 +32,8 @@ size_t validate_json(char *json_file) {
   return VALID_JSON;
 }
 
-void writer_json_obj(FILE *json_fp, json_obj_t json_obj,
-                     void (*json_constructor)(FILE *, json_obj_t)) {
+static void writer_json_obj(FILE *json_fp, json_obj_t json_obj,
+                            void (*json_constructor)(FILE *, json_obj_t)) {
   json_constructor(json_fp, json_obj);
   fputs("]\r\n", json_fp);
 }
@@ -54,6 +52,7 @@ void append_to_file(FILE *json_fp, json_obj_t json_obj,
       writer_json_obj(json_fp, json_obj, json_constructor);
       break;
     default:
+      fprintf(stderr, "File not found or invalid json format");
       exit(EXIT_FAILURE);
   }
 }
