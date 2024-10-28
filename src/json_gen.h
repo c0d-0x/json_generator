@@ -28,8 +28,6 @@ typedef struct {
 
 void append_to_file(FILE *json_fp, json_obj_t json_obj,
                     void (*json_constructor)(FILE *, json_obj_t));
-static void writer_json_obj(FILE *json_fp, json_obj_t json_obj,
-                            void (*json_constructor)(FILE *, json_obj_t));
 size_t validate_json(char *json_file);
 
 #endif  // !JSON_GEN_H
