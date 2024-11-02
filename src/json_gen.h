@@ -8,6 +8,12 @@
 #include <string.h>
 #include <unistd.h>
 
+#ifdef _WIN32
+#define OFFSET 4
+#elif __linux__
+
+#define OFFSET 3
+#endif  // _WIN32 or __linux__
 #define JSON_FILE "sample_gen.json"
 
 enum FILE_STATE { EMPTY_FILE = 0, NOT_FOUND, VALID_JSON, INVALID_JSON };

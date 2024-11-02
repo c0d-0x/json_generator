@@ -22,8 +22,10 @@ size_t validate_json(char *json_file) {
   /**
    * seeking to the last three bytes of the file, which normally should be
    * ']\r\n' -> This is necessary for json decoders
+   *
+   * NB: on windows, jump to the last four bytes of the file.
    */
-  fseek(json_fp, -(long)sizeof(char) * 3, SEEK_END);
+  fseek(json_fp, -(long)OFFSET, SEEK_END);
   CC = fgetc(json_fp);
   fclose(json_fp);
 
