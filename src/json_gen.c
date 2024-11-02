@@ -24,6 +24,7 @@ size_t validate_json(char *json_file) {
    * ']\r\n' -> This is necessary for json decoders
    *
    * NB: on windows, jump to the last four bytes of the file.
+   * This is done using the OFFSET constant
    */
   fseek(json_fp, -(long)OFFSET, SEEK_END);
   CC = fgetc(json_fp);
@@ -45,7 +46,7 @@ void append_to_file(FILE *json_fp, json_obj_t json_obj,
   size_t flag = validate_json(JSON_FILE);
   switch (flag) {
     case VALID_JSON:
-      fseek(json_fp, -(long)sizeof(char) * 3, SEEK_END);
+      fseek(json_fp, -(long)OFFSET, SEEK_END);
       fwrite(",", sizeof(char), 1, json_fp);
       writer_json_obj(json_fp, json_obj, json_constructor);
       break;
