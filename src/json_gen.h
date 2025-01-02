@@ -11,6 +11,7 @@
 
 #ifdef _WIN32
 #define OFFSET 4
+#define asctime_r asctime_s
 #elif __linux__
 #define OFFSET 3
 #endif  // _WIN32 or __linux__
