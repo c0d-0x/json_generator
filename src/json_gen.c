@@ -68,12 +68,8 @@ void close_json_file(FILE *json_fp) {
 
 static char *get_locale_time(void) {
   char *buffer = NULL;
-  if ((buffer = calloc(26, sizeof(char))) == NULL) {
-    fprintf(stderr, "Failed to allocate memory: %s", strerror(errno));
-    return NULL;
-  }
   struct tm tm = *localtime(&(time_t){time(NULL)});
-  asctime_r(&tm, buffer);
+  buffer = asctime(&tm);
   if (buffer[0] == '\0') {
     free(buffer);
     return NULL;
