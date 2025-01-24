@@ -23,6 +23,25 @@ This is a lightweight C-based JSON generator library designed to generate JSON f
 - init_json_gen: Initializes the JSON generator and prepares it for use.
 - close_json_f: Closes the JSON file and cleans up resources.
 
+#Example:
+```c
+#include "src/json_gen.h"
+
+int main(void) {
+  FILE *json_fp = NULL;
+
+  if ((json_fp = init_json_gen()) == NULL) {
+    fprintf(stderr, "Error: Failed initialize json_gen\n");
+    exit(EXIT_FAILURE);
+  }
+
+  write_json_fmt(json_fp, "{\"id\": %d, \"name\": \"%s\"}", 1, "Alice");
+  write_json_fmt(json_fp, "{\"id\": 2, \"name\": \"Bub\"}");
+
+  close_json_f(json_fp);
+  return 0;
+}
+```
 ## Create a New JSON File:
 ```c
 FILE *json_fp = create_new_json_f("my_file.json", BEGIN_SYMBOL);
@@ -47,7 +66,7 @@ size_t size = get_json_f_size("my_file.json");
 rotate_json_f(json_fp, "my_file.json");
 ```
 > [!NOTE]
-> I happened to be generating json data a lot, so i decided to implement this simple lightweight, libc dependent lib.
+> I frequently found myself generating JSON data, so I decided to create this lightweight library that relies solely on libc.
 
 # License
 This project is licensed under the MIT License - see the LICENSE file for details.
