@@ -1,5 +1,18 @@
 # JSON_GEN
 This is a lightweight C-based JSON generator library designed to generate JSON files efficiently. It supports the creation of JSON array files and provides utility functions for manipulating JSON data, including file size management, file rotation, and backup creation.
+> [!NOTE]
+> I frequently found myself generating JSON data, so I decided to create this lightweight library that relies solely on libc.
+# Usage
+```bash
+# Clone this repository
+git clone https://github.com/c0d-0x/json_generator.git
+cd json_generator
+
+# Build the static library
+make static
+
+# Alternatively, you can copy `json_gen.c` and `json_gen.h` directly into your project.
+```
 
 # Features
 - JSON Generation: Generate JSON array files with customizable formatting.
@@ -65,8 +78,6 @@ size_t size = get_json_f_size("my_file.json");
 ```c
 rotate_json_f(json_fp, "my_file.json");
 ```
-> [!NOTE]
-> I frequently found myself generating JSON data, so I decided to create this lightweight library that relies solely on libc.
 
 # License
 This project is licensed under the MIT License - see the LICENSE file for details.
