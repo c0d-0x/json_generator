@@ -23,7 +23,7 @@ This is a lightweight C-based JSON generator library designed to generate JSON f
 - init_json_gen: Initializes the JSON generator and prepares it for use.
 - close_json_f: Closes the JSON file and cleans up resources.
 
-#Example:
+# Example:
 ```c
 #include "src/json_gen.h"
 
