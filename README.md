@@ -25,7 +25,7 @@ make static
 - CUSTOM_ERR: Defines a custom error return code (-1).
 - JSON_FILE: Default name for the generated JSON file (sample_gen.json).
 - FILE_SIZE_MAX: Maximum allowable file size for the JSON file (10 MB).
-- BEGIN_SYMBOL: Starting symbol for the JSON structure ([]\r\n for JSON array).
+- BEGIN_SYMBOL: Starting symbol for the JSON structure (`[]\r\n` for JSON array).
 - FILE_STATE: Enum for defining various file states (e.g., empty, not found, valid, invalid).
 # Functions (APIs)
 - rotate_json_f: Rotates the JSON file when it reaches its maximum size.
