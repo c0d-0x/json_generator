@@ -1,7 +1,7 @@
 # Compiler and flags
 CC = gcc
 CFLAGS = -g -Wall -Wextra -Wformat-security -pedantic
-MAIN = main.c
+MAIN = example.c
 
 # Source and object files
 CFILES = ./src/*.c
