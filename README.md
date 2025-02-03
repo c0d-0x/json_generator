@@ -1,5 +1,5 @@
 # JSON_GEN
-This is a lightweight C-based JSON generator library designed to generate JSON files efficiently. It supports the creation of JSON array files and provides utility functions for manipulating JSON data, including file size management, file rotation, and backup creation.
+This is a lightweight single filed JSON generator library designed to generate JSON files efficiently. It supports the creation of JSON array files and provides utility functions for manipulating JSON data, including file size management, file rotation, and backup creation.
 > [!NOTE]
 > I frequently found myself generating JSON data, so I decided to create this lightweight library that relies solely on libc.
 # Usage
