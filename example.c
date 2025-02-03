@@ -1,11 +1,12 @@
 #include <stdio.h>
 
-#include "src/json_gen.h"
+#define JSON_GEN_IMPL
+#include "json_gen.h"
 
 int main(void) {
   FILE *json_fp = NULL;
 
-  if ((json_fp = init_json_gen()) == NULL) {
+  if ((json_fp = init_json_gen("sample.json")) == NULL) {
     fprintf(stderr, "Error: Failed initialize json_gen\n");
     exit(EXIT_FAILURE);
   }

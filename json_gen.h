@@ -1,6 +1,8 @@
-#include "json_gen.h"
-
+#ifndef JSON_GEN_H
+#define JSON_GEN_H
+#include <errno.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -10,11 +12,34 @@
 #include <time.h>
 #include <unistd.h>
 
+#ifdef _WIN32
+#define OFFSET 4
+#elif __linux__
+#define OFFSET 3
+#endif  // _WIN32 or __linux__
+
+#define CUSTOM_ERR (-1)
+
+/*10 MB max */
+#define FILE_SIZE_MAX 10485760
+/*{}\r\n: json obj file or []\r\n: json array file*/
+#define BEGIN_SYMBOL "[]\r\n"
+enum FILE_STATE { EMPTY_FILE = 0, NOT_FOUND, VALID_JSON, INVALID_JSON };
+
+int rotate_json_f(FILE *json_fp, char *file_name);
+void write_json_fmt(FILE *json_fp, char *fmt, ...);
+void backup_json_f(char *json_file_name);
+size_t get_json_f_size(char *json_file_name);
+FILE *create_new_json_f(const char *json_file_name, const char *begin_symbol);
+FILE *init_json_gen(char *json_file_name);
+void close_json_f(FILE *json_fp);
+
+#ifdef JSON_GEN_IMPL
 static int write_initialized;
-size_t validate_json(char *json_file) {
+size_t validate_json(char *json_file_name) {
   char CC;
   int len, json_fd = -1;
-  if ((json_fd = open(json_file, O_RDONLY)) == -1) {
+  if ((json_fd = open(json_file_name, O_RDONLY)) == -1) {
     return NOT_FOUND;
   }
 
@@ -91,28 +116,28 @@ static char *get_locale_time(void) {
   return buffer;
 }
 
-size_t get_json_f_size(char *file_path) {
+size_t get_json_f_size(char *json_file_name) {
   struct stat buf;
-  if (stat(file_path, &buf) != 0) {
+  if (stat(json_file_name, &buf) != 0) {
     fprintf(stderr, "Error: File stats failed: %s\n", strerror(errno));
     return CUSTOM_ERR;
   }
   return buf.st_size;
 }
 
-void backup_json_f(char *file_path) {
+void backup_json_f(char *json_file_name) {
   char buffer[64];
-  if (access(file_path, F_OK) != 0) return;
+  if (access(json_file_name, F_OK) != 0) return;
 
   char *time_date = get_locale_time();
   snprintf(buffer, 63, "%s.json", time_date);
-  rename(file_path, buffer);
+  rename(json_file_name, buffer);
   if (!time_date) free(time_date);
 }
 
-FILE *create_new_json_f(const char *file_path, const char *begin_symbol) {
+FILE *create_new_json_f(const char *json_file_name, const char *begin_symbol) {
   FILE *fp = NULL;
-  if ((fp = fopen(file_path, "w+")) == NULL) {
+  if ((fp = fopen(json_file_name, "w+")) == NULL) {
     fprintf(stderr, "Error: Failed to create_new_json_f: %s\n",
             strerror(errno));
     return NULL;
@@ -121,42 +146,45 @@ FILE *create_new_json_f(const char *file_path, const char *begin_symbol) {
   return fp;
 }
 
-int rotate_json_f(FILE *json_fp, char *file_name) {
+int rotate_json_f(FILE *json_fp, char *json_file_name) {
   ssize_t file_size;
-  file_size = get_json_f_size(file_name);
+  file_size = get_json_f_size(json_file_name);
   /*call to log_rotation func*/
   if (file_size >= FILE_SIZE_MAX) {
     close_json_f(json_fp);
-    backup_json_f(file_name);
-    json_fp = create_new_json_f(JSON_FILE, BEGIN_SYMBOL);
+    backup_json_f(json_file_name);
+    json_fp = create_new_json_f(json_file_name, BEGIN_SYMBOL);
     return 1;
   }
   return CUSTOM_ERR;
 }
 
-FILE *init_json_gen(void) {
+FILE *init_json_gen(char *json_file_name) {
   FILE *json_fp = NULL;
-  size_t flag = validate_json(JSON_FILE);
+  size_t flag = validate_json(json_file_name);
   switch (flag) {
     case VALID_JSON:
-      if (rotate_json_f(json_fp, JSON_FILE) != CUSTOM_ERR) {
+      if (rotate_json_f(json_fp, json_file_name) != CUSTOM_ERR) {
         return json_fp;
       }
 
       write_initialized = 1;
-      if ((json_fp = fopen(JSON_FILE, "r+")) == NULL) {
+      if ((json_fp = fopen(json_file_name, "r+")) == NULL) {
         fprintf(stderr, "Error: Failed to create_new_json_f: %s\n",
                 strerror(errno));
         return NULL;
       }
       break;
     case INVALID_JSON:
-      fprintf(stderr, "Error: Invalid json format: %s\n", JSON_FILE);
-      backup_json_f(JSON_FILE);
-      json_fp = create_new_json_f(JSON_FILE, BEGIN_SYMBOL);
+      fprintf(stderr, "Error: Invalid json format: %s\n", json_file_name);
+      backup_json_f(json_file_name);
+      json_fp = create_new_json_f(json_file_name, BEGIN_SYMBOL);
       break;
     default:
-      json_fp = create_new_json_f(JSON_FILE, BEGIN_SYMBOL);
+      json_fp = create_new_json_f(json_file_name, BEGIN_SYMBOL);
   }
   return json_fp;
 }
+
+#endif  // JSON_GEN_IMPL
+#endif  // !JSON_GEN_H
