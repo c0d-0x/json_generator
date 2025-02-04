@@ -3,15 +3,10 @@ This is a lightweight single filed JSON generator library designed to generate J
 > [!NOTE]
 > I frequently found myself generating JSON data, so I decided to create this lightweight library that relies solely on libc.
 # Usage
-```bash
-# Clone this repository
-git clone https://github.com/c0d-0x/json_generator.git
-cd json_generator
-
-# Build the static library
-make static
-
-# Alternatively, you can copy `json_gen.c` and `json_gen.h` directly into your project.
+```c
+//copy  json_gen.h` directly into your project.
+#define JSON_GEN_IMPL
+#include "json_gen.h"
 ```
 
 # Features
@@ -38,6 +33,7 @@ make static
 
 # Example:
 ```c
+#define JSON_GEN_IMPL
 #include "src/json_gen.h"
 
 int main(void) {
