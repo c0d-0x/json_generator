@@ -4,7 +4,7 @@ This is a lightweight single filed JSON generator library designed to generate J
 > I frequently found myself generating JSON data, so I decided to create this lightweight library that relies solely on libc.
 # Usage
 ```c
-//copy  json_gen.h` directly into your project.
+/*copy  json_gen.h` directly into your project.*/
 #define JSON_GEN_IMPL
 #include "json_gen.h"
 ```
